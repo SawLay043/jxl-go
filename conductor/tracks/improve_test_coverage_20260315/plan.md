@@ -25,9 +25,10 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Test Coverage Baseline and Benchmarking' (Protocol in workflow.md)
 
 ## Phase 2: Targeted Testing Improvements
-- [ ] Task: Increase Coverage for `entropy` Package
-    - [ ] Write unit tests for ANS and Prefix symbol distributions.
-- [ ] Task: Increase Coverage for `frame` Package
+- [x] Task: Increase Coverage for `entropy` Package
+    - [x] Write unit tests for ANS and Prefix symbol distributions.
+    - [x] Increased coverage to 60.3%.
+- [~] Task: Increase Coverage for `frame` Package
     - [ ] Write unit tests for frame headers and block context.
 - [ ] Task: Implement Integration Tests
     - [ ] Add tests that decode various JXL images and verify output against reference data.

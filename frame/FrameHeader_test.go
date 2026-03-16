@@ -117,6 +117,10 @@ func TestNewFrameHeaderWithReader_RegularFrame_VarDCT_XybEncoded(t *testing.T) {
 			0, // BlendingInfo mode = BLEND_REPLACE
 			0, // nameLen = 0
 		},
+		ReadU64Data: []uint64{
+			0, // Flags
+			0, // ExtensionsKey
+		},
 	}
 
 	fh, err := NewFrameHeaderWithReader(reader, parent)
@@ -161,6 +165,10 @@ func TestNewFrameHeaderWithReader_LFFrame(t *testing.T) {
 			1, // numPasses = 1
 			0, // nameLen = 0
 		},
+		ReadU64Data: []uint64{
+			0, // Flags
+			0, // ExtensionsKey
+		},
 	}
 
 	fh, err := NewFrameHeaderWithReader(reader, parent)
@@ -204,6 +212,10 @@ func TestNewFrameHeaderWithReader_ModularEncoding(t *testing.T) {
 			0, // BlendingInfo mode = BLEND_REPLACE
 			0, // nameLen = 0
 		},
+		ReadU64Data: []uint64{
+			0, // Flags
+			0, // ExtensionsKey
+		},
 	}
 
 	fh, err := NewFrameHeaderWithReader(reader, parent)
@@ -242,6 +254,10 @@ func TestNewFrameHeaderWithReader_DoYCbCr(t *testing.T) {
 			1, // numPasses = 1
 			0, // BlendingInfo mode = BLEND_REPLACE
 			0, // nameLen = 0
+		},
+		ReadU64Data: []uint64{
+			0, // Flags
+			0, // ExtensionsKey
 		},
 	}
 
@@ -283,6 +299,10 @@ func TestNewFrameHeaderWithReader_HaveCrop_SkipProgressive(t *testing.T) {
 			0,  // BlendingInfo mode = BLEND_REPLACE
 			0,  // nameLen = 0
 		},
+		ReadU64Data: []uint64{
+			0, // Flags
+			0, // ExtensionsKey
+		},
 	}
 
 	fh, err := NewFrameHeaderWithReader(reader, parent)
@@ -318,6 +338,10 @@ func TestNewFrameHeaderWithReader_ReferenceOnly(t *testing.T) {
 		},
 		ReadU32Data: []uint32{
 			0, // nameLen = 0
+		},
+		ReadU64Data: []uint64{
+			0, // Flags
+			0, // ExtensionsKey
 		},
 	}
 
@@ -359,6 +383,10 @@ func TestNewFrameHeaderWithReader_SaveBeforeCT(t *testing.T) {
 			0, // BlendingInfo mode = BLEND_REPLACE
 			0, // nameLen = 0
 		},
+		ReadU64Data: []uint64{
+			0, // Flags
+			0, // ExtensionsKey
+		},
 	}
 
 	fh, err := NewFrameHeaderWithReader(reader, parent)
@@ -394,6 +422,10 @@ func TestNewFrameHeaderWithReader_ExtraChannels(t *testing.T) {
 			0, // EcBlendingInfo[0] mode = BLEND_REPLACE
 			0, // EcBlendingInfo[1] mode = BLEND_REPLACE
 			0, // nameLen = 0
+		},
+		ReadU64Data: []uint64{
+			0, // Flags
+			0, // ExtensionsKey
 		},
 	}
 
@@ -445,6 +477,10 @@ func TestNewFrameHeaderWithReader_LFFrame_HigherLfLevel(t *testing.T) {
 			1, // numPasses = 1
 			0, // nameLen = 0
 		},
+		ReadU64Data: []uint64{
+			0, // Flags
+			0, // ExtensionsKey
+		},
 	}
 
 	fh, err := NewFrameHeaderWithReader(reader, parent)
@@ -494,6 +530,10 @@ func TestNewFrameHeaderWithReader_GroupDimDefaults(t *testing.T) {
 					0, // BlendingInfo mode
 					0, // nameLen
 				},
+				ReadU64Data: []uint64{
+					0, // Flags
+					0, // ExtensionsKey
+				},
 			}
 
 			fh, err := NewFrameHeaderWithReader(reader, parent)
@@ -540,6 +580,10 @@ func TestNewFrameHeaderWithReader_UpsamplingValues(t *testing.T) {
 					1, // numPasses = 1
 					0, // BlendingInfo mode
 					0, // nameLen
+				},
+				ReadU64Data: []uint64{
+					0, // Flags
+					0, // ExtensionsKey
 				},
 			}
 
@@ -597,6 +641,10 @@ func TestNewFrameHeaderWithReader_JpegUpsamplingModes(t *testing.T) {
 					1, // numPasses = 1
 					0, // BlendingInfo mode
 					0, // nameLen
+				},
+				ReadU64Data: []uint64{
+					0, // Flags
+					0, // ExtensionsKey
 				},
 			}
 

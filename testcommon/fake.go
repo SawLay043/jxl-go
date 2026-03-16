@@ -14,11 +14,12 @@ type FakeBitReader struct {
 	ReadU8Data   []int
 	ShowBitsData []uint64
 	ReadEnumData []int32
+	ReadU64Data  []uint64
+	ReadByteData []uint8
 }
 
 func (fbr *FakeBitReader) ReadBytesToBuffer(buffer []uint8, numBytes uint32) error {
-	//TODO implement me
-	panic("implement me")
+	return nil
 }
 
 func (fbr *FakeBitReader) ReadBits(bits uint32) (uint64, error) {
@@ -36,8 +37,12 @@ func (fbr *FakeBitReader) ReadByteArrayWithOffsetAndLength(buffer []byte, offset
 }
 
 func (fbr *FakeBitReader) ReadByte() (uint8, error) {
-	//TODO implement me
-	panic("implement me")
+	if len(fbr.ReadByteData) > 0 {
+		val := fbr.ReadByteData[0]
+		fbr.ReadByteData = fbr.ReadByteData[1:]
+		return val, nil
+	}
+	return 0, fmt.Errorf("No more data")
 }
 
 func (fbr *FakeBitReader) ReadEnum() (int32, error) {
@@ -78,8 +83,7 @@ func (fbr *FakeBitReader) GetBitsCount() uint64 {
 }
 
 func (fbr *FakeBitReader) ZeroPadToByte() error {
-	//TODO implement me
-	panic("implement me")
+	return nil
 }
 
 func NewFakeBitReader() *FakeBitReader {
@@ -96,7 +100,12 @@ func (fbr *FakeBitReader) ReadBool() (bool, error) {
 }
 
 func (fbr *FakeBitReader) ReadU64() (uint64, error) {
-	return 0, nil
+	if len(fbr.ReadU64Data) > 0 {
+		val := fbr.ReadU64Data[0]
+		fbr.ReadU64Data = fbr.ReadU64Data[1:]
+		return val, nil
+	}
+	return 0, fmt.Errorf("No more data")
 }
 
 func (fbr *FakeBitReader) ReadF16() (float32, error) {

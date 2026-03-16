@@ -608,7 +608,7 @@ func inverseHorizontalSqueeze(channel *ModularChannel, orig *ModularChannel, res
 			if x > 0 {
 				left = channel.buffer[y][2*x-1]
 			} else {
-				nextAvg = avg
+				left = avg
 			}
 			diff := residu + tendancy(left, avg, nextAvg)
 			first := avg + diff/2
@@ -650,7 +650,7 @@ func inverseVerticalSqueeze(channel *ModularChannel, orig *ModularChannel, res *
 			if y > 0 {
 				top = channel.buffer[2*y-1][x]
 			} else {
-				nextAvg = avg
+				top = avg
 			}
 			diff := residu + tendancy(top, avg, nextAvg)
 			first := avg + diff/2

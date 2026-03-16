@@ -34,7 +34,7 @@ func TestNewHFBlockContextWithReader(t *testing.T) {
 				1, // nbQfThread
 			},
 			boolData: []bool{
-				true,
+				false,
 				true, // simple clustering
 			},
 			expectedResult: HFBlockContext{

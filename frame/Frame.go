@@ -177,7 +177,13 @@ func (f *Frame) ReadTOC() error {
 }
 
 func (f *Frame) readBuffer(index int) ([]uint8, error) {
+
+	if index < 0 || index >= len(f.tocLengths) {
+		return nil, errors.New("invalid TOC index")
+	}
+
 	length := f.tocLengths[index]
+
 	buffer := make([]uint8, length+4)
 	err := f.reader.ReadBytesToBuffer(buffer, length)
 	if err != nil {
@@ -499,6 +505,10 @@ func (f *Frame) GetColourChannelCount() int {
 }
 
 func (f *Frame) GetPaddedFrameSize() (util.Dimension, error) {
+
+	if f.Header == nil || f.Header.Bounds == nil {
+		return util.Dimension{}, errors.New("frame header or bounds is nil")
+	}
 
 	factorY := 1 << util.Max(f.Header.jpegUpsamplingY...)
 	factorX := 1 << util.Max(f.Header.jpegUpsamplingX...)

@@ -7,18 +7,22 @@ import (
 // FakeBitReader is a mock implementation of a bit reader for testing purposes.
 // Will populate the functions as required
 type FakeBitReader struct {
-	ReadF16Data  []float32
-	ReadBoolData []bool
-	ReadBitsData []uint64
-	ReadU32Data  []uint32
-	ReadU8Data   []int
-	ShowBitsData []uint64
-	ReadEnumData []int32
-	ReadU64Data  []uint64
-	ReadByteData []uint8
+	ReadF16Data    []float32
+	ReadBoolData   []bool
+	ReadBitsData   []uint64
+	ReadU32Data    []uint32
+	ReadU8Data     []int
+	ShowBitsData   []uint64
+	ReadEnumData   []int32
+	ReadU64Data    []uint64
+	ReadByteData   []uint8
+	ReadBytesError error
 }
 
 func (fbr *FakeBitReader) ReadBytesToBuffer(buffer []uint8, numBytes uint32) error {
+	if fbr.ReadBytesError != nil {
+		return fbr.ReadBytesError
+	}
 	return nil
 }
 

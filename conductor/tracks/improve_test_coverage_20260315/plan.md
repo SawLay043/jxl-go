@@ -24,14 +24,16 @@
     - BenchmarkDecodeGrayscale: ~59 ms/op, ~16 MB/op, ~143k allocs/op
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Test Coverage Baseline and Benchmarking' (Protocol in workflow.md)
 
-## Phase 2: Targeted Testing Improvements
+## Phase 2: Targeted Testing Improvements [checkpoint: 4619904]
 - [x] Task: Increase Coverage for `entropy` Package
     - [x] Write unit tests for ANS and Prefix symbol distributions.
     - [x] Increased coverage to 60.3%.
-- [~] Task: Increase Coverage for `frame` Package
-    - [ ] Write unit tests for frame headers and block context.
-- [ ] Task: Implement Integration Tests
-    - [ ] Add tests that decode various JXL images and verify output against reference data.
+- [x] Task: Increase Coverage for `frame` Package
+    - [x] Merge and fix existing tests from `Frame_extra_test.go` into `Frame_test.go`.
+    - [x] Increased coverage to 81.8% (met >80% target).
+    - [x] Add tests for `LFGlobal` and `ModularStream` transforms.
+- [x] Task: Implement Integration Tests [586522c]
+    - [x] Add tests that decode various JXL images and verify output against reference data.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Targeted Testing Improvements' (Protocol in workflow.md)
 
 ## Phase 3: Performance Analysis and Optimization

@@ -237,6 +237,13 @@ func NewFrameHeaderWithReader(reader jxlio.BitReader, parent *bundle.ImageHeader
 	}
 
 	if fh.haveCrop {
+		if fh.Bounds == nil {
+			fh.Bounds = &util.Rectangle{
+				Origin: util.Point{X: 0, Y: 0},
+				Size:   util.Dimension{},
+			}
+		}
+
 		if width, err := reader.ReadU32(0, 8, 256, 11, 2304, 14, 18688, 30); err != nil {
 			return nil, err
 		} else {

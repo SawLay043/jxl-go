@@ -24,7 +24,7 @@
     - BenchmarkDecodeGrayscale: ~59 ms/op, ~16 MB/op, ~143k allocs/op
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Test Coverage Baseline and Benchmarking' (Protocol in workflow.md)
 
-## Phase 2: Targeted Testing Improvements [checkpoint: 4619904]
+## Phase 2: Targeted Testing Improvements [checkpoint: 97556fb]
 - [x] Task: Increase Coverage for `entropy` Package
     - [x] Write unit tests for ANS and Prefix symbol distributions.
     - [x] Increased coverage to 60.3%.
@@ -34,7 +34,7 @@
     - [x] Add tests for `LFGlobal` and `ModularStream` transforms.
 - [x] Task: Implement Integration Tests [586522c]
     - [x] Add tests that decode various JXL images and verify output against reference data.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Targeted Testing Improvements' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Targeted Testing Improvements' (Protocol in workflow.md)
 
 ## Phase 3: Performance Analysis and Optimization
 - [ ] Task: Perform Profiling

@@ -50,3 +50,6 @@
 - [x] Task: Explore Parallelism/SIMD
     - [x] Investigate and prototype parallelism for independent decoding tasks.
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Performance Analysis and Optimization' (Protocol in workflow.md) [c119076]
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions [26f2852]

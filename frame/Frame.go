@@ -575,38 +575,64 @@ func (f *Frame) decodeLFGroups(lfBuffer []image.ImageBuffer) error {
 		templateWidths[i] = r.size.Width
 	}
 
+	errChan := make(chan error, f.numLFGroups)
+	var wg sync.WaitGroup
+	// Ensure at least 1 goroutine
+	maxGoroutines := f.options.MaxGoroutines
+	if maxGoroutines < 1 {
+		maxGoroutines = 1
+	}
+	sem := make(chan struct{}, maxGoroutines)
+
 	for lfGroupID := uint32(0); lfGroupID < f.numLFGroups; lfGroupID++ {
-		reader, err := f.getBitreader(1 + int(lfGroupID))
-		if err != nil {
-			return err
-		}
+		wg.Add(1)
+		sem <- struct{}{}
 
-		lfGroupPos := f.getLFGroupLocation(int32(lfGroupID))
+		go func(id uint32) {
+			defer wg.Done()
+			defer func() { <-sem }()
 
-		// Pre-allocate with correct capacity, use index assignment instead of append
-		replaced := make([]ModularChannel, numReplacements)
-		for i, r := range lfReplacementChannels {
-			// Copy the template channel directly instead of calling NewModularChannelFromChannel
-			replaced[i] = ModularChannel{
-				size:    r.size,
-				origin:  r.origin,
-				hshift:  r.hshift,
-				vshift:  r.vshift,
-				decoded: r.decoded,
-				// buffer is nil - will be allocated by NewLFGroupWithReader if needed
+			reader, err := f.getBitreader(1 + int(id))
+			if err != nil {
+				errChan <- err
+				return
 			}
 
-			// Update origin and size for this specific LF group
-			replaced[i].origin.Y = lfGroupPos.Y * int32(templateHeights[i])
-			replaced[i].origin.X = lfGroupPos.X * int32(templateWidths[i])
-			replaced[i].size.Height = util.Min(templateHeights[i], lfHeights[i]-uint32(replaced[i].origin.Y))
-			replaced[i].size.Width = util.Min(templateWidths[i], lfWidths[i]-uint32(replaced[i].origin.X))
-		}
+			lfGroupPos := f.getLFGroupLocation(int32(id))
 
-		f.lfGroups[lfGroupID], err = NewLFGroupWithReader(reader, f, int32(lfGroupID), replaced, lfBuffer, NewLFCoefficientsWithReader, NewHFMetadataWithReader)
-		if err != nil {
-			return err
-		}
+			// Pre-allocate with correct capacity, use index assignment instead of append
+			replaced := make([]ModularChannel, numReplacements)
+			for i, r := range lfReplacementChannels {
+				// Copy the template channel directly instead of calling NewModularChannelFromChannel
+				replaced[i] = ModularChannel{
+					size:    r.size,
+					origin:  r.origin,
+					hshift:  r.hshift,
+					vshift:  r.vshift,
+					decoded: r.decoded,
+					// buffer is nil - will be allocated by NewLFGroupWithReader if needed
+				}
+
+				// Update origin and size for this specific LF group
+				replaced[i].origin.Y = lfGroupPos.Y * int32(templateHeights[i])
+				replaced[i].origin.X = lfGroupPos.X * int32(templateWidths[i])
+				replaced[i].size.Height = util.Min(templateHeights[i], lfHeights[i]-uint32(replaced[i].origin.Y))
+				replaced[i].size.Width = util.Min(templateWidths[i], lfWidths[i]-uint32(replaced[i].origin.X))
+			}
+
+			lfg, err := NewLFGroupWithReader(reader, f, int32(id), replaced, lfBuffer, NewLFCoefficientsWithReader, NewHFMetadataWithReader)
+			if err != nil {
+				errChan <- err
+				return
+			}
+			f.lfGroups[id] = lfg
+		}(lfGroupID)
+	}
+
+	wg.Wait()
+	close(errChan)
+	if len(errChan) > 0 {
+		return <-errChan
 	}
 
 	// Allocate all replacement channels once BEFORE copying data from LF groups
@@ -760,17 +786,33 @@ func (f *Frame) decodePassGroupsConcurrent() error {
 		}
 
 		for pass := 0; pass < numPasses; pass++ {
+			var wg sync.WaitGroup
+			errChan := make(chan error, numGroups)
+			sem := make(chan struct{}, f.options.MaxGoroutines)
+
 			for group := 0; group < numGroups; group++ {
-				passGroup := &passGroups[pass][group]
-				var prev *PassGroup
-				if pass > 0 {
-					prev = &passGroups[pass-1][group]
-				} else {
-					prev = nil
-				}
-				if err := passGroup.invertVarDCT(buffers, prev); err != nil {
-					return err
-				}
+				wg.Add(1)
+				go func(p, g int) {
+					defer wg.Done()
+					sem <- struct{}{}
+					defer func() { <-sem }()
+
+					passGroup := &passGroups[p][g]
+					var prev *PassGroup
+					if p > 0 {
+						prev = &passGroups[p-1][g]
+					} else {
+						prev = nil
+					}
+					if err := passGroup.invertVarDCT(buffers, prev); err != nil {
+						errChan <- err
+					}
+				}(pass, group)
+			}
+			wg.Wait()
+			close(errChan)
+			if len(errChan) > 0 {
+				return <-errChan
 			}
 		}
 
@@ -1416,42 +1458,70 @@ func (f *Frame) performUpsampling(ib image.ImageBuffer, c int) (*image.ImageBuff
 	}
 	upWeights := up[l]
 	newBuffer := util.MakeMatrix2D[float32](len(buffer)*int(k), 0)
-	for y := 0; y < len(buffer); y++ {
-		for ky := 0; ky < int(k); ky++ {
-			newBuffer[y*int(k)+ky] = make([]float32, len(buffer[y])*int(k))
-			for x := 0; x < len(buffer[y]); x++ {
-				for kx := 0; kx < int(k); kx++ {
-					weights := upWeights[ky][kx]
-					total := float32(0.0)
-					min := float32(math.MaxFloat32)
-					max := float32(math.SmallestNonzeroFloat32)
-					for iy := 0; iy < 5; iy++ {
-						for ix := 0; ix < 5; ix++ {
-							newY := util.MirrorCoordinate(int32(y)+int32(iy)-2, int32(len(buffer)))
-							newX := util.MirrorCoordinate(int32(x)+int32(ix)-2, int32(len(buffer[newY])))
-							sample := buffer[newY][newX]
-							if sample < min {
-								min = sample
+
+	maxGoroutines := 1
+	if f.options != nil {
+		maxGoroutines = f.options.MaxGoroutines
+	}
+	if maxGoroutines < 1 {
+		maxGoroutines = 1
+	}
+	rows := len(buffer)
+	rowsPerWorker := (rows + maxGoroutines - 1) / maxGoroutines
+	var wg sync.WaitGroup
+
+	for i := 0; i < maxGoroutines; i++ {
+		start := i * rowsPerWorker
+		end := start + rowsPerWorker
+		if start >= rows {
+			break
+		}
+		if end > rows {
+			end = rows
+		}
+
+		wg.Add(1)
+		go func(startY, endY int) {
+			defer wg.Done()
+			for y := startY; y < endY; y++ {
+				for ky := 0; ky < int(k); ky++ {
+					newBuffer[y*int(k)+ky] = make([]float32, len(buffer[y])*int(k))
+					for x := 0; x < len(buffer[y]); x++ {
+						for kx := 0; kx < int(k); kx++ {
+							weights := upWeights[ky][kx]
+							total := float32(0.0)
+							min := float32(math.MaxFloat32)
+							max := float32(math.SmallestNonzeroFloat32)
+							for iy := 0; iy < 5; iy++ {
+								for ix := 0; ix < 5; ix++ {
+									newY := util.MirrorCoordinate(int32(y)+int32(iy)-2, int32(len(buffer)))
+									newX := util.MirrorCoordinate(int32(x)+int32(ix)-2, int32(len(buffer[newY])))
+									sample := buffer[newY][newX]
+									if sample < min {
+										min = sample
+									}
+									if sample > max {
+										max = sample
+									}
+									total += weights[iy][ix] * sample
+								}
 							}
-							if sample > max {
-								max = sample
+							var val float32
+							if total < min {
+								val = min
+							} else if total > max {
+								val = max
+							} else {
+								val = total
 							}
-							total += weights[iy][ix] * sample
+							newBuffer[y*int(k)+ky][x*int(k)+kx] = val
 						}
 					}
-					var val float32
-					if total < min {
-						val = min
-					} else if total > max {
-						val = max
-					} else {
-						val = total
-					}
-					newBuffer[y*int(k)+ky][x*int(k)+kx] = val
 				}
 			}
-		}
+		}(start, end)
 	}
+	wg.Wait()
 
 	return image.NewImageBufferFromFloats(newBuffer), nil
 

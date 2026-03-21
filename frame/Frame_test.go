@@ -200,7 +200,9 @@ func TestGetNumLFGroups(t *testing.T) {
 
 func TestUpsamplePerformUpsampling(t *testing.T) {
 	// Basic invocation to ensure no panic; extensive correctness is covered elsewhere
-	f := &Frame{}
+	f := &Frame{
+		options: &options.JXLOptions{MaxGoroutines: 1},
+	}
 	f.Header = &FrameHeader{Upsampling: 2}
 	// initialize BitDepth and upsample weights to avoid nil deref
 	f.GlobalMetadata = &bundle.ImageHeader{BitDepth: &bundle.BitDepthHeader{BitsPerSample: 8}}

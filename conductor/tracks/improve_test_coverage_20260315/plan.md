@@ -47,6 +47,6 @@
     - [x] Optimize buffer pool key generation to reduce allocations.
     - [x] Add resource cleanup (`Release`) for `Frame` and `HFGlobal`.
     - [x] Benchmark the improvements (reduced allocs/op).
-- [ ] Task: Explore Parallelism/SIMD
-    - [ ] Investigate and prototype parallelism for independent decoding tasks.
+- [x] Task: Explore Parallelism/SIMD
+    - [x] Investigate and prototype parallelism for independent decoding tasks.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Performance Analysis and Optimization' (Protocol in workflow.md)

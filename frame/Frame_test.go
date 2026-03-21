@@ -2,6 +2,7 @@ package frame
 
 import (
 	"bytes"
+	"math"
 	"testing"
 
 	"github.com/kpfaulkner/jxl-go/bundle"
@@ -807,8 +808,9 @@ func TestAbsFloat32EdgeCases(t *testing.T) {
 	}
 
 	// Test negative zero
-	if got := absFloat32(-0.0); got != 0.0 {
-		t.Errorf("absFloat32(-0.0) = %f; want 0.0", got)
+	negZero := math.Float32frombits(0x80000000)
+	if got := absFloat32(negZero); got != 0.0 {
+		t.Errorf("absFloat32(negZero) = %f; want 0.0", got)
 	}
 
 	// Test very small numbers
@@ -1334,11 +1336,11 @@ func TestDecodeFrame(t *testing.T) {
 
 	frame := &Frame{
 		tocPermutation: nil,
-		tocLengths: []uint32{1},
-		lfGroups:   nil,
-		Buffer:     nil,
-		passes:     nil,
-		bitreaders: nil,
+		tocLengths:     []uint32{1},
+		lfGroups:       nil,
+		Buffer:         nil,
+		passes:         nil,
+		bitreaders:     nil,
 		GlobalMetadata: &bundle.ImageHeader{
 			BitDepth: &bundle.BitDepthHeader{
 				BitsPerSample:    0,
@@ -1451,7 +1453,7 @@ func TestPerformEdgePreservingFilter_Merged(t *testing.T) {
 			Upsampling:      1,
 		},
 		GlobalMetadata: &bundle.ImageHeader{
-			BitDepth: &bundle.BitDepthHeader{BitsPerSample: 8},
+			BitDepth:       &bundle.BitDepthHeader{BitsPerSample: 8},
 			ColourEncoding: &colour.ColourEncodingBundle{ColourEncoding: colour.CE_RGB},
 		},
 		options: &options.JXLOptions{MaxGoroutines: 1},
@@ -1499,16 +1501,16 @@ func TestPerformEdgePreservingFilter_Vardct_Merged(t *testing.T) {
 			BitDepth: &bundle.BitDepthHeader{BitsPerSample: 8},
 		},
 		LfGlobal: &LFGlobal{
-			lfDequant: []float32{1.0, 1.0, 1.0},
+			lfDequant:   []float32{1.0, 1.0, 1.0},
 			globalScale: 1,
 		},
-		lfGroups: make([]*LFGroup, 1),
+		lfGroups:         make([]*LFGroup, 1),
 		lfGroupRowStride: 1,
-		options: &options.JXLOptions{MaxGoroutines: 1},
+		options:          &options.JXLOptions{MaxGoroutines: 1},
 	}
 	f.lfGroups[0] = &LFGroup{
 		hfMetadata: &HFMetadata{
-			hfMultiplier: util.MakeMatrix2D[int32](256, 256),
+			hfMultiplier:   util.MakeMatrix2D[int32](256, 256),
 			hfStreamBuffer: make([][][]int32, 4),
 		},
 	}
@@ -1544,8 +1546,8 @@ func TestReadFrameHeader_Merged(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, uint32(REGULAR_FRAME), header.FrameType)
 	assert.Equal(t, uint32(256), f.Header.groupDim)
-	assert.Equal(t, uint32(1), f.numGroups) 
-	assert.Equal(t, uint32(1), f.numLFGroups) 
+	assert.Equal(t, uint32(1), f.numGroups)
+	assert.Equal(t, uint32(1), f.numLFGroups)
 }
 
 func TestReadFrameHeader_ErrorPadding_Merged(t *testing.T) {
@@ -1668,14 +1670,14 @@ func TestDecodeFrame_VARDCT_Merged(t *testing.T) {
 		GlobalMetadata: &bundle.ImageHeader{
 			BitDepth: &bundle.BitDepthHeader{BitsPerSample: 8},
 		},
-		options: &options.JXLOptions{MaxGoroutines: 1},
-		numLFGroups: 1,
+		options:          &options.JXLOptions{MaxGoroutines: 1},
+		numLFGroups:      1,
 		lfGroupRowStride: 1,
-		groupRowStride: 1,
+		groupRowStride:   1,
 	}
 
 	err := f.DecodeFrame(nil, NewFakeLFGlobalWithReaderFunc)
-	_ = err 
+	_ = err
 }
 
 func TestIsVisible_AllCases_Merged(t *testing.T) {
@@ -1727,18 +1729,18 @@ func TestDecodeFrame_Complex_Merged(t *testing.T) {
 				numPasses: 1,
 			},
 			restorationFilter: &RestorationFilter{},
-			lfGroupDim: 2048,
-			groupDim: 256,
+			lfGroupDim:        2048,
+			groupDim:          256,
 		},
 		GlobalMetadata: &bundle.ImageHeader{
-			BitDepth: &bundle.BitDepthHeader{BitsPerSample: 8},
+			BitDepth:       &bundle.BitDepthHeader{BitsPerSample: 8},
 			ColourEncoding: &colour.ColourEncodingBundle{ColourEncoding: colour.CE_RGB},
 		},
-		options: &options.JXLOptions{MaxGoroutines: 1},
-		numLFGroups: 2,
-		numGroups: 16,
+		options:          &options.JXLOptions{MaxGoroutines: 1},
+		numLFGroups:      2,
+		numGroups:        16,
 		lfGroupRowStride: 2,
-		groupRowStride: 16,
+		groupRowStride:   16,
 	}
 
 	err := f.DecodeFrame(nil, NewFakeLFGlobalWithChannelsFunc(channels))
@@ -1749,7 +1751,7 @@ func TestDecodePassGroupsConcurrent_Merged(t *testing.T) {
 	hfctx := &HFBlockContext{numClusters: 1}
 	lfg := &LFGroup{
 		hfMetadata: &HFMetadata{
-			hfMultiplier: util.MakeMatrix2D[int32](1, 1),
+			hfMultiplier:   util.MakeMatrix2D[int32](1, 1),
 			hfStreamBuffer: make([][][]int32, 4),
 		},
 	}
@@ -1794,9 +1796,9 @@ func TestDecodePassGroupsConcurrent_Merged(t *testing.T) {
 			},
 			hfBlockCtx: hfctx,
 		},
-		hfGlobal: &HFGlobal{numHFPresets: 1},
-		lfGroups: []*LFGroup{lfg},
-		groupRowStride: 1,
+		hfGlobal:         &HFGlobal{numHFPresets: 1},
+		lfGroups:         []*LFGroup{lfg},
+		groupRowStride:   1,
 		lfGroupRowStride: 1,
 	}
 
@@ -1807,7 +1809,7 @@ func TestDecodePassGroupsConcurrent_Merged(t *testing.T) {
 func TestFrame_GetLFGroupSize_Error_Merged(t *testing.T) {
 	f := &Frame{
 		lfGroupRowStride: 1,
-		Header: &FrameHeader{},
+		Header:           &FrameHeader{},
 	}
 	_, err := f.getLFGroupSize(0)
 	assert.Error(t, err)
@@ -1829,7 +1831,7 @@ func TestFrame_GetLFGroupSize_Merged(t *testing.T) {
 	assert.Equal(t, uint32(2048), sz.Width)
 	assert.Equal(t, uint32(2048), sz.Height)
 
-	sz, err = f.getLFGroupSize(3) 
+	sz, err = f.getLFGroupSize(3)
 	require.NoError(t, err)
 	assert.Equal(t, uint32(952), sz.Width)
 	assert.Equal(t, uint32(952), sz.Height)
@@ -1854,7 +1856,7 @@ func TestFrame_GetGroupSize_Merged(t *testing.T) {
 	assert.Equal(t, uint32(256), sz.Width)
 	assert.Equal(t, uint32(256), sz.Height)
 
-	sz, err = f.getGroupSize(3) 
+	sz, err = f.getGroupSize(3)
 	require.NoError(t, err)
 	assert.Equal(t, uint32(48), sz.Width)
 	assert.Equal(t, uint32(48), sz.Height)
@@ -1864,8 +1866,8 @@ func TestFrame_GetLFGroupForGroup_Merged(t *testing.T) {
 	lfg := &LFGroup{}
 	f := &Frame{
 		lfGroupRowStride: 1,
-		groupRowStride: 8,
-		lfGroups: []*LFGroup{lfg},
+		groupRowStride:   8,
+		lfGroups:         []*LFGroup{lfg},
 	}
 	assert.Equal(t, lfg, f.getLFGroupForGroup(0))
 }

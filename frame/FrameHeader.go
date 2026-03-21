@@ -124,25 +124,24 @@ func NewFrameHeaderWithReader(reader jxlio.BitReader, parent *bundle.ImageHeader
 			case 3:
 				fh.jpegUpsamplingY[i] = 1
 				fh.jpegUpsamplingX[i] = 0
-			default:
-				break
 			}
 		}
 	}
 
 	fh.EcUpsampling = make([]uint32, len(parent.ExtraChannelInfo))
 	if !allDefault && (fh.Flags&USE_LF_FRAME) == 0 {
-		if upsampling, err := reader.ReadBits(2); err != nil {
+		upsampling, err := reader.ReadBits(2)
+		if err != nil {
 			return nil, err
-		} else {
-			fh.Upsampling = 1 << upsampling
 		}
+		fh.Upsampling = 1 << upsampling
+
 		for i := 0; i < len(fh.EcUpsampling); i++ {
-			if ecUpsampling, err := reader.ReadBits(2); err != nil {
+			ecUpsampling, err := reader.ReadBits(2)
+			if err != nil {
 				return nil, err
-			} else {
-				fh.EcUpsampling[i] = 1 << ecUpsampling
 			}
+			fh.EcUpsampling[i] = 1 << ecUpsampling
 		}
 	} else {
 		fh.Upsampling = 1

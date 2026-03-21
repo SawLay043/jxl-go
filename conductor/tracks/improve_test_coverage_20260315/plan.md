@@ -37,10 +37,16 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Targeted Testing Improvements' (Protocol in workflow.md)
 
 ## Phase 3: Performance Analysis and Optimization
-- [ ] Task: Perform Profiling
-    - [ ] Use profiling tools to identify performance bottlenecks during decoding.
-- [ ] Task: Optimize Memory Allocation
-    - [ ] Implement optimizations for frequent memory allocations in hot paths.
+- [x] Task: Perform Profiling [97556fb]
+    - [x] Use profiling tools to identify performance bottlenecks during decoding.
+    - [x] CPU Hotspots: `prePredictWP`, `getLeafNode`, `walk`, `decode`, `ReadSymbol`.
+    - [x] Memory Hotspots: `MakeMatrix3D` and `MakeMatrix2D` (over 90% of allocations).
+- [x] Task: Optimize Memory Allocation
+    - [x] Implement optimizations for frequent memory allocations in hot paths.
+    - [x] Implement pooling for `MakeMatrix3D` and `MakeMatrix2D`.
+    - [x] Optimize buffer pool key generation to reduce allocations.
+    - [x] Add resource cleanup (`Release`) for `Frame` and `HFGlobal`.
+    - [x] Benchmark the improvements (reduced allocs/op).
 - [ ] Task: Explore Parallelism/SIMD
     - [ ] Investigate and prototype parallelism for independent decoding tasks.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Performance Analysis and Optimization' (Protocol in workflow.md)

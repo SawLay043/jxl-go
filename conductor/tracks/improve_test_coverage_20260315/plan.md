@@ -36,7 +36,7 @@
     - [x] Add tests that decode various JXL images and verify output against reference data.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Targeted Testing Improvements' (Protocol in workflow.md)
 
-## Phase 3: Performance Analysis and Optimization
+## Phase 3: Performance Analysis and Optimization [checkpoint: c119076]
 - [x] Task: Perform Profiling [97556fb]
     - [x] Use profiling tools to identify performance bottlenecks during decoding.
     - [x] CPU Hotspots: `prePredictWP`, `getLeafNode`, `walk`, `decode`, `ReadSymbol`.
@@ -49,4 +49,4 @@
     - [x] Benchmark the improvements (reduced allocs/op).
 - [x] Task: Explore Parallelism/SIMD
     - [x] Investigate and prototype parallelism for independent decoding tasks.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Performance Analysis and Optimization' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Performance Analysis and Optimization' (Protocol in workflow.md) [c119076]

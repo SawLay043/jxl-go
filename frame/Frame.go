@@ -578,7 +578,10 @@ func (f *Frame) decodeLFGroups(lfBuffer []image.ImageBuffer) error {
 	errChan := make(chan error, f.numLFGroups)
 	var wg sync.WaitGroup
 	// Ensure at least 1 goroutine
-	maxGoroutines := f.options.MaxGoroutines
+	maxGoroutines := 1
+	if f.options != nil {
+		maxGoroutines = f.options.MaxGoroutines
+	}
 	if maxGoroutines < 1 {
 		maxGoroutines = 1
 	}
@@ -741,7 +744,14 @@ func (f *Frame) decodePassGroupsConcurrent() error {
 	close(inputChan)
 
 	wg := sync.WaitGroup{}
-	for i := 0; i < f.options.MaxGoroutines; i++ {
+	maxGoroutines := 1
+	if f.options != nil {
+		maxGoroutines = f.options.MaxGoroutines
+	}
+	if maxGoroutines < 1 {
+		maxGoroutines = 1
+	}
+	for i := 0; i < maxGoroutines; i++ {
 		wg.Add(1)
 		go func() {
 			f.startWorker(inputChan, passGroups)
@@ -788,7 +798,7 @@ func (f *Frame) decodePassGroupsConcurrent() error {
 		for pass := 0; pass < numPasses; pass++ {
 			var wg sync.WaitGroup
 			errChan := make(chan error, numGroups)
-			sem := make(chan struct{}, f.options.MaxGoroutines)
+			sem := make(chan struct{}, maxGoroutines)
 
 			for group := 0; group < numGroups; group++ {
 				wg.Add(1)

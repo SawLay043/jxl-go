@@ -40,7 +40,7 @@ func (fbr *FakeBitReader) ReadByteArrayWithOffsetAndLength(buffer []byte, offset
 	panic("implement me")
 }
 
-func (fbr *FakeBitReader) ReadByte() (uint8, error) {
+func (fbr *FakeBitReader) ReadByte() (byte, error) {
 	if len(fbr.ReadByteData) > 0 {
 		val := fbr.ReadByteData[0]
 		fbr.ReadByteData = fbr.ReadByteData[1:]

@@ -304,11 +304,13 @@ func NewFrameHeaderWithReader(reader jxlio.BitReader, parent *bundle.ImageHeader
 	if normalFrame && parent.AnimationHeader != nil {
 		// dont care about animation
 		panic("animation")
-		dur, err := reader.ReadU32(0, 0, 1, 0, 0, 8, 0, 32)
-		if err != nil {
-			return nil, err
-		}
-		fh.Duration = dur
+		/*
+			dur, err := reader.ReadU32(0, 0, 1, 0, 0, 8, 0, 32)
+			if err != nil {
+				return nil, err
+			}
+			fh.Duration = dur
+		*/
 	} else {
 		fh.Duration = 0
 	}

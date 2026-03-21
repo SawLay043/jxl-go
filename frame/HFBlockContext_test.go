@@ -152,7 +152,7 @@ func TestNewHFBlockContextWithReader_ErrorPaths(t *testing.T) {
 		reader := &testcommon.FakeBitReader{
 			ReadBoolData: []bool{false},
 			ReadBitsData: []uint64{1, 1, 1, 15}, // nbLFThresh=[1,1,1], nbQfThread=15
-			ReadU32Data:  []uint32{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+			ReadU32Data:  []uint32{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		}
 		hf, err := NewHFBlockContextWithReader(reader, fakeReadClusterMap)
 		assert.Error(t, err)

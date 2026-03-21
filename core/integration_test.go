@@ -49,6 +49,34 @@ func TestIntegrationDecodes(t *testing.T) {
 			filename:     "../testdata/lossless.jxl",
 			expectedHash: "c154a3a4419b4883d69ab49d39d00278",
 		},
+		{
+			filename:     "../testdata/grayscale.jxl",
+			expectedHash: "e99f5d4caf40647622d8285337d8493b",
+		},
+		{
+			filename:     "../testdata/alpha-triangles.jxl",
+			expectedHash: "ae06b22fb7541f7ebc360383c4b0c7c5",
+		},
+		{
+			filename:     "../testdata/sunset_logo.jxl",
+			expectedHash: "d691865dea655dcadf8499b6f45fa0bd",
+		},
+		{
+			filename:     "../testdata/art.jxl",
+			expectedHash: "cfa0d5bf4d80242bc68b4ad3824667d9",
+		},
+		{
+			filename:     "../testdata/quilt.jxl",
+			expectedHash: "5830480191d8d4bffae662086161eaa3",
+		},
+		{
+			filename:     "../testdata/lenna.jxl",
+			expectedHash: "e2cd199b6f3e838dfe1faee7634ecf01",
+		},
+		{
+			filename:     "../testdata/church.jxl",
+			expectedHash: "51e3fffb70989be99282fefeb289cffe",
+		},
 	}
 
 	for _, tc := range testCases {

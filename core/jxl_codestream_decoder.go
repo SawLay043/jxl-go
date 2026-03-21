@@ -189,6 +189,7 @@ func (jxl *JXLCodestreamDecoder) decode() (*JXLImage, error) {
 				jxl.lfBuffer[header.LfLevel-1] = imgFrame.Buffer
 			}
 			if header.FrameType == frame.LF_FRAME {
+				imgFrame.Release()
 				continue
 			}
 			save := (header.SaveAsReference != 0 || header.Duration == 0) && !header.IsLast && header.FrameType != frame.LF_FRAME

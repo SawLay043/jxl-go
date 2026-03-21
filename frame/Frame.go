@@ -1533,6 +1533,12 @@ func (f *Frame) getColourChannelCount() int32 {
 	return int32(f.GlobalMetadata.GetColourChannelCount())
 }
 
+func (f *Frame) Release() {
+	if f.hfGlobal != nil {
+		f.hfGlobal.Release()
+	}
+}
+
 // generate a total (signature?) for each row of each channel in the buffer.
 // This is just to see if we can compare Go and Java
 // Assume float buffer

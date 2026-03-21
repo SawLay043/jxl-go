@@ -19,7 +19,7 @@ jxl-go is a Go library for reading JPEG XL (JXL) images, with a current focus on
 ## Core Features
 - **Lossless Decoding (Current):** A primary focus on correctly decoding lossless JXL images to maintain the highest quality possible.
 - **Lossy Decoding (Future):** Expanding the library's capabilities to include support for lossy image decoding, as outlined in the project roadmap.
-- **Performance Optimizations (Future):** Targeting memory allocation, parallelism, and SIMD to significantly improve decoding speeds.
+- **Performance Optimizations (Current):** Actively optimized for memory efficiency and parallelized decoding of LF groups and upsampling filters.
 
 ## Scope of Integration
 - **Standard Image Library Integration:** Enabling easy conversion of decoded JXL data into Go's standard `image.Image` format for broad compatibility.

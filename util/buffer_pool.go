@@ -40,12 +40,7 @@ func (p *Matrix3DPool[T]) Get(depth, height, width int) [][][]T {
 	pool, exists := p.pools[key]
 	p.mu.RUnlock()
 
-	if exists {
-		if matrix := pool.Get(); matrix != nil {
-			p.hits.Add(1)
-			return matrix.([][][]T)
-		}
-	} else {
+	if !exists {
 		// Slow path: create new pool
 		p.mu.Lock()
 		// Double-check after acquiring write lock
@@ -53,12 +48,18 @@ func (p *Matrix3DPool[T]) Get(depth, height, width int) [][][]T {
 		if !exists {
 			pool = &sync.Pool{
 				New: func() interface{} {
-					return MakeMatrix3D[T](depth, height, width)
+					m := MakeMatrix3D[T](depth, height, width)
+					return &m
 				},
 			}
 			p.pools[key] = pool
 		}
 		p.mu.Unlock()
+	}
+
+	if matrix := pool.Get(); matrix != nil {
+		p.hits.Add(1)
+		return *(matrix.(*[][][]T))
 	}
 
 	p.misses.Add(1)
@@ -72,10 +73,6 @@ func (p *Matrix3DPool[T]) Put(matrix [][][]T) {
 	}
 
 	depth := len(matrix)
-	if depth == 0 {
-		return
-	}
-
 	height := len(matrix[0])
 	if height == 0 {
 		return
@@ -98,7 +95,7 @@ func (p *Matrix3DPool[T]) Put(matrix [][][]T) {
 				}
 			}
 		}
-		pool.Put(matrix)
+		pool.Put(&matrix)
 	}
 }
 
@@ -131,23 +128,24 @@ func (p *Matrix2DPool[T]) Get(height, width int) [][]T {
 	pool, exists := p.pools[key]
 	p.mu.RUnlock()
 
-	if exists {
-		if matrix := pool.Get(); matrix != nil {
-			p.hits.Add(1)
-			return matrix.([][]T)
-		}
-	} else {
+	if !exists {
 		p.mu.Lock()
 		pool, exists = p.pools[key]
 		if !exists {
 			pool = &sync.Pool{
 				New: func() interface{} {
-					return MakeMatrix2D[T](height, width)
+					m := MakeMatrix2D[T](height, width)
+					return &m
 				},
 			}
 			p.pools[key] = pool
 		}
 		p.mu.Unlock()
+	}
+
+	if matrix := pool.Get(); matrix != nil {
+		p.hits.Add(1)
+		return *(matrix.(*[][]T))
 	}
 
 	p.misses.Add(1)
@@ -161,10 +159,6 @@ func (p *Matrix2DPool[T]) Put(matrix [][]T) {
 	}
 
 	height := len(matrix)
-	if height == 0 {
-		return
-	}
-
 	width := len(matrix[0])
 	key := poolKey2D{h: height, w: width}
 
@@ -179,7 +173,7 @@ func (p *Matrix2DPool[T]) Put(matrix [][]T) {
 				matrix[i][j] = zero
 			}
 		}
-		pool.Put(matrix)
+		pool.Put(&matrix)
 	}
 }
 

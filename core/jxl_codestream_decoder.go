@@ -256,15 +256,13 @@ func (jxl *JXLCodestreamDecoder) decode() (*JXLImage, error) {
 					}
 				}
 
-				// FIXME(kpfaulkner) need to figure out new copies of canvas... why?
-				// nolint
 				if found {
-					canvas2 := make([]image2.ImageBuffer, len(jxl.canvas))
+					canvas2 := make([]image2.ImageBuffer, 0, len(jxl.canvas))
 					for _, ib := range jxl.canvas {
 						ib2 := image2.NewImageBufferFromImageBuffer(&ib, true)
 						canvas2 = append(canvas2, *ib2)
 					}
-					//jxl.canvas = canvas2
+					jxl.canvas = canvas2
 				}
 				err = jxl.blendFrame(jxl.canvas, imgFrame)
 				if err != nil {

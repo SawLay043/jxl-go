@@ -875,7 +875,7 @@ func TestPerformUpsamplingNoUpsampling(t *testing.T) {
 	// With k=1, the function returns a pointer to the input buffer
 	// Just verify result is valid and has same dimensions
 	if result == nil {
-		t.Error("performUpsampling result should not be nil")
+		t.Fatalf("performUpsampling result should not be nil")
 	}
 	if result.Width != ib.Width || result.Height != ib.Height {
 		t.Errorf("performUpsampling with k=1 should preserve size: got %dx%d, want %dx%d",

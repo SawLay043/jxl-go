@@ -710,8 +710,8 @@ func (f *Frame) doProcessing(iPass int, iGroup int, passGroups [][]PassGroup) er
 		rowStride := util.CeilDiv(info.size.Width, groupWidth)
 		info.origin.Y = int32((uint32(iGroup) / rowStride) * groupHeight)
 		info.origin.X = int32((uint32(iGroup) % rowStride) * groupWidth)
-		info.size.Height = util.Min[uint32](info.size.Height-uint32(info.origin.Y), uint32(groupHeight))
-		info.size.Width = util.Min[uint32](info.size.Width-uint32(info.origin.X), uint32(groupWidth))
+		info.size.Height = util.Min(info.size.Height-uint32(info.origin.Y), uint32(groupHeight))
+		info.size.Width = util.Min(info.size.Width-uint32(info.origin.X), uint32(groupWidth))
 		replaced[i] = info
 	}
 
@@ -838,7 +838,7 @@ func (f *Frame) decodePassGroupsConcurrent() error {
 }
 
 // nolint
-func displayBuffers(text string, frameBuffer [][][]float32) {
+func displayBuffers(_ string, frameBuffer [][][]float32) {
 	total := 0.0
 	for c := 0; c < len(frameBuffer); c++ {
 		for y := 0; y < len(frameBuffer[c]); y++ {
@@ -850,7 +850,7 @@ func displayBuffers(text string, frameBuffer [][][]float32) {
 }
 
 // nolint
-func displayBuffer(text string, frameBuffer [][]float32) {
+func displayBuffer(_ string, frameBuffer [][]float32) {
 	total := 0.0
 
 	for y := 0; y < len(frameBuffer); y++ {
@@ -1128,11 +1128,12 @@ func (f *Frame) performEdgePreservingFilter() error {
 		// Note: Don't return outputBuffers to pool - they get swapped into f.Buffer
 
 		var sigmaScale float32
-		if i == 0 {
+		switch i {
+		case 0:
 			sigmaScale = stepMultiplier * f.Header.restorationFilter.epfPass0SigmaScale
-		} else if i == 2 {
+		case 2:
 			sigmaScale = stepMultiplier * f.Header.restorationFilter.epfPass2SigmaScale
-		} else {
+		default:
 			sigmaScale = stepMultiplier
 		}
 

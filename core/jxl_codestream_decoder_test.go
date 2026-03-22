@@ -569,14 +569,14 @@ func TestPerformBlending(t *testing.T) {
 			frameStartX:  0,
 			frameOffsetX: 0,
 			hasAlpha:     true,
-			refBuffer: []image.ImageBuffer{image.ImageBuffer{
+			refBuffer: []image.ImageBuffer{{
 				Width:       10,
 				Height:      10,
 				BufferType:  image.TYPE_FLOAT,
 				FloatBuffer: makeFullMatrix[float32](10, 10, 12),
 			}},
 			imageColours: 0,
-			frameBuffers: []image.ImageBuffer{image.ImageBuffer{
+			frameBuffers: []image.ImageBuffer{{
 				Width:       10,
 				Height:      10,
 				BufferType:  image.TYPE_INT,
@@ -630,14 +630,14 @@ func TestPerformBlending(t *testing.T) {
 			frameStartX:  0,
 			frameOffsetX: 0,
 			hasAlpha:     true,
-			refBuffer: []image.ImageBuffer{image.ImageBuffer{
+			refBuffer: []image.ImageBuffer{{
 				Width:       10,
 				Height:      10,
 				BufferType:  image.TYPE_FLOAT,
 				FloatBuffer: makeFullMatrix[float32](10, 10, 12),
 			}},
 			imageColours: 0,
-			frameBuffers: []image.ImageBuffer{image.ImageBuffer{
+			frameBuffers: []image.ImageBuffer{{
 				Width:       10,
 				Height:      10,
 				BufferType:  image.TYPE_INT,
@@ -1208,7 +1208,7 @@ func TestComputePatches(t *testing.T) {
 			jxl := NewJXLCodestreamDecoder(nil, nil)
 			jxl.imageHeader = tc.imageHeader
 			jxl.reference = make([][]image.ImageBuffer, 1)
-			jxl.reference[0] = []image.ImageBuffer{image.ImageBuffer{
+			jxl.reference[0] = []image.ImageBuffer{{
 				Width:       10,
 				Height:      10,
 				BufferType:  image.TYPE_INT,

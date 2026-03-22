@@ -324,7 +324,7 @@ func (jxl *JXLCodestreamDecoder) ReadSignatureAndBoxes() error {
 	return nil
 }
 
-func (jxl *JXLCodestreamDecoder) computePatches(frame *frame.Frame) error {
+func (jxl *JXLCodestreamDecoder) computePatches(_ *frame.Frame) error {
 
 	// do not support patches yet.
 	return nil

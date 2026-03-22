@@ -30,7 +30,7 @@ func TestNewHFBlockContextWithReader(t *testing.T) {
 				true,
 			},
 			expectedResult: HFBlockContext{
-				lfThresholds:  [][]int32{[]int32{}, []int32{}, []int32{}},
+				lfThresholds:  [][]int32{{}, {}, {}},
 				clusterMap:    []int{0, 1, 2, 2, 3, 3, 4, 5, 6, 6, 6, 6, 6, 7, 8, 9, 9, 10, 11, 12, 13, 14, 14, 14, 14, 14, 7, 8, 9, 9, 10, 11, 12, 13, 14, 14, 14, 14, 14},
 				numClusters:   15,
 				qfThresholds:  []int32{},
@@ -54,7 +54,7 @@ func TestNewHFBlockContextWithReader(t *testing.T) {
 				true, // simple clustering
 			},
 			expectedResult: HFBlockContext{
-				lfThresholds:  [][]int32{[]int32{}, []int32{-1}, []int32{1, 1}},
+				lfThresholds:  [][]int32{{}, {-1}, {1, 1}},
 				clusterMap:    make([]int, 468),
 				numClusters:   1,
 				qfThresholds:  []int32{2},

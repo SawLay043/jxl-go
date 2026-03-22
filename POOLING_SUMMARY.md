@@ -88,4 +88,4 @@ for pool, stats := range metrics {
 **Status:** ✅ Production Ready & Optimized
 **Version:** 1.1
 **Date:** 2026-Mar-22
-**Tested:** AMD Ryzen 9 5900X, Go 1.x, Windows
+**Tested:** 12th Gen Intel(R) Core(TM) i5-12600KF, Go 1.x, Windows

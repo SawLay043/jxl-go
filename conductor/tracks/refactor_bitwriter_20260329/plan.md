@@ -10,11 +10,11 @@
 - [x] Task: Verify shared `BitWriter` tests pass.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Create Shared Utility' (Protocol in workflow.md)
 
-## Phase 3: Refactor frame Package
-- [ ] Task: Modify `frame/Quantizer_test.go` to import `testcommon` and use `testcommon.BitWriter`.
-- [ ] Task: Remove the local `BitWriter` definition from `frame/Quantizer_test.go`.
-- [ ] Task: Run `go test ./frame/...` and ensure all tests pass.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Refactor frame Package' (Protocol in workflow.md)
+## Phase 3: Refactor frame Package [checkpoint: a39d52e]
+- [x] Task: Modify `frame/Quantizer_test.go` to import `testcommon` and use `testcommon.BitWriter`.
+- [x] Task: Remove the local `BitWriter` definition from `frame/Quantizer_test.go`.
+- [x] Task: Run `go test ./frame/...` and ensure all tests pass.
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Refactor frame Package' (Protocol in workflow.md)
 
 ## Phase 4: Refactor entropy Package
 - [ ] Task: Modify `entropy/SymbolDistribution_test.go` to import `testcommon` and use `testcommon.BitWriter`.

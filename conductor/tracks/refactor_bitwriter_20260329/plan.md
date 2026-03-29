@@ -22,7 +22,7 @@
 - [x] Task: Run `go test ./entropy/...` and ensure all tests pass.
 - [x] Task: Conductor - User Manual Verification 'Phase 4: Refactor entropy Package' (Protocol in workflow.md)
 
-## Phase 5: Final Cleanup & Verification
-- [ ] Task: Perform a final search for any remaining local `BitWriter` implementations in test files.
-- [ ] Task: Ensure all project tests pass: `go test ./...`.
-- [ ] Task: Conductor - User Manual Verification 'Phase 5: Final Cleanup & Verification' (Protocol in workflow.md)
+## Phase 5: Final Cleanup & Verification [checkpoint: 76c7fdb]
+- [x] Task: Perform a final search for any remaining local `BitWriter` implementations in test files.
+- [x] Task: Ensure all project tests pass: `go test ./...`.
+- [x] Task: Conductor - User Manual Verification 'Phase 5: Final Cleanup & Verification' (Protocol in workflow.md)

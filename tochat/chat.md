@@ -1,0 +1,1 @@
+There are `POOLING_SUMMARY.md`, `POOLING_IMPLEMENTATION_GUIDE.md`, `MEMORY_POOL_OPTIMIZATIONS.md` files which the project maintainer wrote about things. Is our changes and improvements impact on them?

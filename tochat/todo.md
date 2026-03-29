@@ -1,0 +1,1 @@
+Increase the coverage of the `entropy` package.

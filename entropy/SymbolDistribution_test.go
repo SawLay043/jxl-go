@@ -5,56 +5,12 @@ import (
 	"testing"
 
 	"github.com/kpfaulkner/jxl-go/jxlio"
+	"github.com/kpfaulkner/jxl-go/testcommon"
 	"github.com/stretchr/testify/assert"
 )
 
-type BitWriter struct {
-	data []byte
-	byte byte
-	bits int
-}
-
-func (bw *BitWriter) WriteBit(bit uint8) {
-	if bit != 0 {
-		bw.byte |= (1 << bw.bits)
-	}
-	bw.bits++
-	if bw.bits == 8 {
-		bw.data = append(bw.data, bw.byte)
-		bw.byte = 0
-		bw.bits = 0
-	}
-}
-
-func (bw *BitWriter) WriteBits(val uint64, numBits int) {
-	for i := 0; i < numBits; i++ {
-		bw.WriteBit(uint8((val >> i) & 1))
-	}
-}
-
-func (bw *BitWriter) WriteU8(val int) {
-	if val == 0 {
-		bw.WriteBit(0)
-		return
-	}
-	bw.WriteBit(1)
-	n := 0
-	for (1 << (n + 1)) <= val {
-		n++
-	}
-	bw.WriteBits(uint64(n), 3)
-	bw.WriteBits(uint64(val-(1<<n)), n)
-}
-
-func (bw *BitWriter) Bytes() []byte {
-	if bw.bits > 0 {
-		return append(bw.data, bw.byte)
-	}
-	return bw.data
-}
-
 func TestHybridIntegerConfig(t *testing.T) {
-	bw := &BitWriter{}
+	bw := testcommon.NewBitWriter()
 	bw.WriteBits(8, 4) // SplitExponent = 8
 	
 	br := jxlio.NewBitStreamReader(bytes.NewReader(bw.Bytes()))
@@ -66,7 +22,7 @@ func TestHybridIntegerConfig(t *testing.T) {
 }
 
 func TestANSSymbolDistributionSimple(t *testing.T) {
-	bw := &BitWriter{}
+	bw := testcommon.NewBitWriter()
 	bw.WriteBit(1) // simpleDistribution = true
 	bw.WriteBit(0) // dist1 = false
 	bw.WriteU8(4)  // x = 4
@@ -87,7 +43,7 @@ func TestANSSymbolDistributionSimple(t *testing.T) {
 }
 
 func TestANSSymbolDistributionDualPeak(t *testing.T) {
-	bw := &BitWriter{}
+	bw := testcommon.NewBitWriter()
 	bw.WriteBit(1)    // simpleDistribution = true
 	bw.WriteBit(1)    // dist1 = true
 	bw.WriteU8(3)     // v1 = 3
@@ -103,7 +59,7 @@ func TestANSSymbolDistributionDualPeak(t *testing.T) {
 }
 
 func TestANSSymbolDistributionFlat(t *testing.T) {
-	bw := &BitWriter{}
+	bw := testcommon.NewBitWriter()
 	bw.WriteBit(0) // simpleDistribution = false
 	bw.WriteBit(1) // flat = true
 	bw.WriteU8(3)  // r = 3 -> alphabetSize = 4
@@ -118,7 +74,7 @@ func TestANSSymbolDistributionFlat(t *testing.T) {
 }
 
 func TestANSSymbolDistributionComplex(t *testing.T) {
-	bw := &BitWriter{}
+	bw := testcommon.NewBitWriter()
 	bw.WriteBit(0) // simpleDistribution = false
 	bw.WriteBit(0) // flat = false
 	
@@ -184,7 +140,7 @@ func TestPrefixSymbolDistributionSingle(t *testing.T) {
 }
 
 func TestPrefixSymbolDistributionSimple(t *testing.T) {
-	bw := &BitWriter{}
+	bw := testcommon.NewBitWriter()
 	bw.WriteBits(1, 2) // hskip = 1
 	bw.WriteBits(1, 2) // nsym = 2 (n=1)
 	bw.WriteBits(2, 3) // symbol 0 = 2 (logAlphabetSize = 3)
@@ -196,14 +152,14 @@ func TestPrefixSymbolDistributionSimple(t *testing.T) {
 	assert.NotNil(t, psd.table)
 
 	// Read symbols
-	bw_read := &BitWriter{}
+	bw_read := testcommon.NewBitWriter()
 	bw_read.WriteBit(0) // bit 0 is symbol 2
 	br_read := jxlio.NewBitStreamReader(bytes.NewReader(bw_read.Bytes()))
 	sym, err := psd.ReadSymbol(br_read, nil)
 	assert.NoError(t, err)
 	assert.Equal(t, int32(2), sym)
 
-	bw_read = &BitWriter{}
+	bw_read = testcommon.NewBitWriter()
 	bw_read.WriteBit(1) // bit 1 is symbol 5
 	br_read = jxlio.NewBitStreamReader(bytes.NewReader(bw_read.Bytes()))
 	sym, err = psd.ReadSymbol(br_read, nil)
@@ -212,7 +168,7 @@ func TestPrefixSymbolDistributionSimple(t *testing.T) {
 }
 
 func TestPrefixSymbolDistributionComplex(t *testing.T) {
-	bw := &BitWriter{}
+	bw := testcommon.NewBitWriter()
 	bw.WriteBits(0, 2) // hskip = 0
 	
 	// Level 1: we need to satisfy totalCode >= 32
@@ -239,7 +195,7 @@ func TestPrefixSymbolDistributionComplex(t *testing.T) {
 	
 	// Let's try to just hit hskip > 1 or something simpler if complex is too hard to craft.
 	// Actually, hskip=2 or 3 is valid and hits populateComplexPrefix.
-	bw = &BitWriter{}
+	bw = testcommon.NewBitWriter()
 	bw.WriteBits(2, 2) // hskip = 2
 	// Level 1 codes start from i=2.
 	// sym 0: level0Table {0, 2} bits 00

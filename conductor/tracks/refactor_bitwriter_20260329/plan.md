@@ -4,11 +4,11 @@
 - [x] Task: Create the `testcommon` directory if it doesn't exist.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Preparation & Setup' (Protocol in workflow.md)
 
-## Phase 2: Create Shared Utility
-- [ ] Task: Create `testcommon/bitwriter.go` and implement the `BitWriter` struct with exported methods: `WriteBit`, `WriteBits`, `WriteU8`, and `Bytes`.
-- [ ] Task: Write unit tests for the shared `BitWriter` in `testcommon/bitwriter_test.go`.
-- [ ] Task: Verify shared `BitWriter` tests pass.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Create Shared Utility' (Protocol in workflow.md)
+## Phase 2: Create Shared Utility [checkpoint: 1ec1ac9]
+- [x] Task: Create `testcommon/bitwriter.go` and implement the `BitWriter` struct with exported methods: `WriteBit`, `WriteBits`, `WriteU8`, and `Bytes`.
+- [x] Task: Write unit tests for the shared `BitWriter` in `testcommon/bitwriter_test.go`.
+- [x] Task: Verify shared `BitWriter` tests pass.
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Create Shared Utility' (Protocol in workflow.md)
 
 ## Phase 3: Refactor frame Package
 - [ ] Task: Modify `frame/Quantizer_test.go` to import `testcommon` and use `testcommon.BitWriter`.

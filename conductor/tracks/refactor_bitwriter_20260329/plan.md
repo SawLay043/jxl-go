@@ -16,11 +16,11 @@
 - [x] Task: Run `go test ./frame/...` and ensure all tests pass.
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Refactor frame Package' (Protocol in workflow.md)
 
-## Phase 4: Refactor entropy Package
-- [ ] Task: Modify `entropy/SymbolDistribution_test.go` to import `testcommon` and use `testcommon.BitWriter`.
-- [ ] Task: Remove the local `BitWriter` definition from `entropy/SymbolDistribution_test.go`.
-- [ ] Task: Run `go test ./entropy/...` and ensure all tests pass.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Refactor entropy Package' (Protocol in workflow.md)
+## Phase 4: Refactor entropy Package [checkpoint: 09fda5d]
+- [x] Task: Modify `entropy/SymbolDistribution_test.go` to import `testcommon` and use `testcommon.BitWriter`.
+- [x] Task: Remove the local `BitWriter` definition from `entropy/SymbolDistribution_test.go`.
+- [x] Task: Run `go test ./entropy/...` and ensure all tests pass.
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Refactor entropy Package' (Protocol in workflow.md)
 
 ## Phase 5: Final Cleanup & Verification
 - [ ] Task: Perform a final search for any remaining local `BitWriter` implementations in test files.

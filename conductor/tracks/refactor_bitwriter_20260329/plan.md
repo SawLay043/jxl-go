@@ -1,8 +1,8 @@
 # Implementation Plan: Refactor BitWriter to Shared Test Utility
 
-## Phase 1: Preparation & Setup
-- [ ] Task: Create the `testcommon` directory if it doesn't exist.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Preparation & Setup' (Protocol in workflow.md)
+## Phase 1: Preparation & Setup [checkpoint: e68ee0b]
+- [x] Task: Create the `testcommon` directory if it doesn't exist.
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Preparation & Setup' (Protocol in workflow.md)
 
 ## Phase 2: Create Shared Utility
 - [ ] Task: Create `testcommon/bitwriter.go` and implement the `BitWriter` struct with exported methods: `WriteBit`, `WriteBits`, `WriteU8`, and `Bytes`.

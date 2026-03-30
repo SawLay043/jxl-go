@@ -8,7 +8,7 @@
     - [ ] Ensure tests cover the execution of these functions (already partially done in `frame/Frame_test.go`).
     - [ ] Prepare to verify that `log.Debugf` is called with the correct label and sum.
 
-## Phase 2: PNG Writer Cleanup (`core/png_writer.go`)
+## Phase 2: PNG Writer Cleanup (`core/png_writer.go`) [checkpoint: b3dbb16]
 - [x] Task: Refactor `writeSRGB` to use `*JXLImage` and dynamic CRC (3e26e93)
     - [x] Rename parameter `_` to `jxlImage`.
     - [x] Implement rendering intent retrieval from `jxlImage.imageHeader.ColourEncoding.RenderingIntent`.

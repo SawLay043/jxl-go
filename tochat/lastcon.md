@@ -1,5 +1,4 @@
-PR asks 'Can this be merged/replaced with the one in SymbolDistribution_test.go ?' for `frame\Quantizer_test.go`. And I want to reply 'No' to keep the test file naming consistency, are those codes from that file related to `frame\Quantizer.go`?
-
+This is the last review findings.
 
   Findings
 
@@ -28,5 +27,7 @@ PR asks 'Can this be merged/replaced with the one in SymbolDistribution_test.go 
    5      bits int
    6  }
 
+
+and this is the last thing you did in last session.
 
    go test ./testcommon/... ./entropy/... ./frame/...

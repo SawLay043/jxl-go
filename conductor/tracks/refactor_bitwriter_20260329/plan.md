@@ -26,3 +26,6 @@
 - [x] Task: Perform a final search for any remaining local `BitWriter` implementations in test files.
 - [x] Task: Ensure all project tests pass: `go test ./...`.
 - [x] Task: Conductor - User Manual Verification 'Phase 5: Final Cleanup & Verification' (Protocol in workflow.md)
+
+## Phase: Review Fixes
+- [~] Task: Apply review suggestions

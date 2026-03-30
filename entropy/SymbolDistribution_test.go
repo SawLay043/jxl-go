@@ -12,7 +12,7 @@ import (
 func TestHybridIntegerConfig(t *testing.T) {
 	bw := testcommon.NewBitWriter()
 	bw.WriteBits(8, 4) // SplitExponent = 8
-	
+
 	br := jxlio.NewBitStreamReader(bytes.NewReader(bw.Bytes()))
 	hic, err := NewHybridIntegerConfigWithReader(br, 8)
 	assert.NoError(t, err)
@@ -26,7 +26,7 @@ func TestANSSymbolDistributionSimple(t *testing.T) {
 	bw.WriteBit(1) // simpleDistribution = true
 	bw.WriteBit(0) // dist1 = false
 	bw.WriteU8(4)  // x = 4
-	
+
 	br := jxlio.NewBitStreamReader(bytes.NewReader(bw.Bytes()))
 	asd, err := NewANSSymbolDistribution(br, 8)
 	assert.NoError(t, err)
@@ -35,7 +35,7 @@ func TestANSSymbolDistributionSimple(t *testing.T) {
 
 	// Test ReadSymbol
 	state := &ANSState{HasState: false}
-	data := []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} 
+	data := []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	br = jxlio.NewBitStreamReader(bytes.NewReader(data))
 	sym, err := asd.ReadSymbol(br, state)
 	assert.NoError(t, err)
@@ -44,12 +44,12 @@ func TestANSSymbolDistributionSimple(t *testing.T) {
 
 func TestANSSymbolDistributionDualPeak(t *testing.T) {
 	bw := testcommon.NewBitWriter()
-	bw.WriteBit(1)    // simpleDistribution = true
-	bw.WriteBit(1)    // dist1 = true
-	bw.WriteU8(3)     // v1 = 3
-	bw.WriteU8(7)     // v2 = 7
+	bw.WriteBit(1)         // simpleDistribution = true
+	bw.WriteBit(1)         // dist1 = true
+	bw.WriteU8(3)          // v1 = 3
+	bw.WriteU8(7)          // v2 = 7
 	bw.WriteBits(1024, 12) // freq = 1024
-	
+
 	br := jxlio.NewBitStreamReader(bytes.NewReader(bw.Bytes()))
 	asd, err := NewANSSymbolDistribution(br, 8)
 	assert.NoError(t, err)
@@ -63,7 +63,7 @@ func TestANSSymbolDistributionFlat(t *testing.T) {
 	bw.WriteBit(0) // simpleDistribution = false
 	bw.WriteBit(1) // flat = true
 	bw.WriteU8(3)  // r = 3 -> alphabetSize = 4
-	
+
 	br := jxlio.NewBitStreamReader(bytes.NewReader(bw.Bytes()))
 	asd, err := NewANSSymbolDistribution(br, 8)
 	assert.NoError(t, err)
@@ -77,37 +77,37 @@ func TestANSSymbolDistributionComplex(t *testing.T) {
 	bw := testcommon.NewBitWriter()
 	bw.WriteBit(0) // simpleDistribution = false
 	bw.WriteBit(0) // flat = false
-	
+
 	// Complex distribution:
 	// logAlphabetSize = 8
 	// 3 bits for l: let's say l=0 (0)
 	bw.WriteBit(0) // l=0
 	// shift = (0 | 1<<0) - 1 = 0
-	
+
 	// ReadU8 for r: let's say r=1
 	bw.WriteU8(1) // r=1 -> alphabetSize = 3 + 1 = 4
-	
+
 	// logCounts for each symbol using distPrefixTable
 	// distPrefixTable uses 7 bits for VLC.
 	// {10, 3} -> symbol 10, bits 3 (000)
 	// We want logCounts to be, say, {2, 2, 2, 2}
 	// distPrefixTable: {2, 4} is bits 1111? No, let's check table.
 	// Looking at distPrefixTable in ANSSymbolDistribution.go:
-	// {2, 4} is at some indices. 
+	// {2, 4} is at some indices.
 	// Let's use simpler values from the table:
 	// {10, 3} is at index 0, 8, 16...
 	// So 000 (3 bits) gives 10.
-	
+
 	// logCounts:
 	// sym 0: 10 (bits 000)
 	// sym 1: 10 (bits 000)
 	// sym 2: 10 (bits 000)
 	// sym 3: 10 (bits 000)
-	bw.WriteBits(0, 3) 
 	bw.WriteBits(0, 3)
 	bw.WriteBits(0, 3)
 	bw.WriteBits(0, 3)
-	
+	bw.WriteBits(0, 3)
+
 	// This will set omitPos to 0 (since all are 10, first one wins).
 	// frequencies for 1, 2, 3 will be read.
 	// logCounts[i] = 10. shift = 0.
@@ -116,7 +116,7 @@ func TestANSSymbolDistributionComplex(t *testing.T) {
 	// asd.frequencies[i] = 1<<(10-1) + 0 = 512.
 	// Total count = 512*3 = 1536.
 	// asd.frequencies[0] = 4096 - 1536 = 2560.
-	
+
 	br := jxlio.NewBitStreamReader(bytes.NewReader(bw.Bytes()))
 	asd, err := NewANSSymbolDistribution(br, 8)
 	assert.NoError(t, err)
@@ -145,7 +145,7 @@ func TestPrefixSymbolDistributionSimple(t *testing.T) {
 	bw.WriteBits(1, 2) // nsym = 2 (n=1)
 	bw.WriteBits(2, 3) // symbol 0 = 2 (logAlphabetSize = 3)
 	bw.WriteBits(5, 3) // symbol 1 = 5
-	
+
 	br := jxlio.NewBitStreamReader(bytes.NewReader(bw.Bytes()))
 	psd, err := NewPrefixSymbolDistributionWithReader(br, 8)
 	assert.NoError(t, err)
@@ -170,14 +170,14 @@ func TestPrefixSymbolDistributionSimple(t *testing.T) {
 func TestPrefixSymbolDistributionComplex(t *testing.T) {
 	bw := testcommon.NewBitWriter()
 	bw.WriteBits(0, 2) // hskip = 0
-	
+
 	// Level 1: we need to satisfy totalCode >= 32
-	// level0Table: {0, 2} is bits 00 or 100 or 1000... 
+	// level0Table: {0, 2} is bits 00 or 100 or 1000...
 	// Let's use bits for symbol 0 (which maps to level 1 length for codelenMap[0]=1)
 	// codelenMap = {1, 2, 3, 4, 0, 5, 17, 6, 16, 7, 8, 9, 10, 11, 12, 13, 14, 15}
 	// level0Table index 0 is {0, 2} (bits 00)
-	
-	// We want to provide 32 codes worth. 
+
+	// We want to provide 32 codes worth.
 	// sym 0: length 1 -> 32/2^1 = 16.
 	// sym 1: length 1 -> 16. Total = 32.
 	// hskip=0. i goes from 0 to 17.
@@ -192,7 +192,7 @@ func TestPrefixSymbolDistributionComplex(t *testing.T) {
 	// If numCodes == 1, it's simpler.
 	// TotalCode = 32 >> code. If code=5, totalCode=1.
 	// We need 32/32 = 1 code of length 0? No.
-	
+
 	// Let's try to just hit hskip > 1 or something simpler if complex is too hard to craft.
 	// Actually, hskip=2 or 3 is valid and hits populateComplexPrefix.
 	bw = testcommon.NewBitWriter()
@@ -204,7 +204,7 @@ func TestPrefixSymbolDistributionComplex(t *testing.T) {
 	for i := 0; i < 20; i++ {
 		bw.WriteBits(0, 8)
 	}
-	
+
 	br := jxlio.NewBitStreamReader(bytes.NewReader(bw.Bytes()))
 	// alphabetSize = 8
 	_, _ = NewPrefixSymbolDistributionWithReader(br, 8)

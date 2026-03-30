@@ -17,7 +17,7 @@
 - [x] Task: Verify `writeSRGB` changes (3e26e93)
     - [x] Run tests in `core/` and ensure success for `writeSRGB`.
     - [x] Check coverage for `core/png_writer.go`.
-- [ ] Task: Conductor - User Manual Verification 'PNG Writer Cleanup' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'PNG Writer Cleanup' (Protocol in workflow.md)
 
 ## Phase 3: Frame Debug Functions Functionalization (`frame/Frame.go`)
 - [ ] Task: Update `displayBuffer` and `displayBuffers` to use all parameters and return sum

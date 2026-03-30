@@ -656,10 +656,12 @@ func TestDisplayBuffers(t *testing.T) {
 	}
 
 	// Just ensure it doesn't panic
-	displayBuffers("test", frameBuffer)
+	sum1 := displayBuffers("test", frameBuffer)
+	assert.Equal(t, 36.0, sum1)
 
 	singleBuffer := [][]float32{{1.0, 2.0}, {3.0, 4.0}}
-	displayBuffer("test", singleBuffer)
+	sum2 := displayBuffer("test", singleBuffer)
+	assert.Equal(t, 10.0, sum2)
 }
 
 // TestUpsampleFull tests the full Upsample method

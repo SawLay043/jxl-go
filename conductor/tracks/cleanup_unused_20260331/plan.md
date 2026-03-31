@@ -28,7 +28,7 @@
 - [x] Task: Verify Frame debug changes (c7dc250)
     - [x] Run tests in `frame/` and ensure they pass.
     - [x] Verify that debug logs are produced.
-- [ ] Task: Conductor - User Manual Verification 'Frame Debug Functionalization' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Frame Debug Functionalization' (Protocol in workflow.md) (cfafdd9)
 
 ## Phase 4: Final Validation and Cleanup
 - [ ] Task: Run full project test suite

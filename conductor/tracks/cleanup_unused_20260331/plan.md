@@ -1,6 +1,6 @@
 # Implementation Plan: Clean up PNG writer sRGB parameter and functionalize frame debug functions
 
-## Phase 1: Preparation and Testing Setup
+## Phase 1: Preparation and Testing Setup [checkpoint: 8bacc7c]
 - [x] Task: Create reproduction/verification tests for `writeSRGB` in `core/png_writer_test.go`
     - [x] Add a test case that checks if `writeSRGB` correctly handles different rendering intents.
     - [x] Verify that the current hardcoded implementation always produces the same output regardless of input.
@@ -19,7 +19,7 @@
     - [x] Check coverage for `core/png_writer.go`.
 - [x] Task: Conductor - User Manual Verification 'PNG Writer Cleanup' (Protocol in workflow.md)
 
-## Phase 3: Frame Debug Functions Functionalization (`frame/Frame.go`)
+## Phase 3: Frame Debug Functions Functionalization (`frame/Frame.go`) [checkpoint: 8bacc7c]
 - [x] Task: Update `displayBuffer` and `displayBuffers` to use all parameters and return sum (c7dc250)
     - [x] Rename `_` to `label`.
     - [x] Add `log.Debugf` calls to output the `label` and calculated `total` sum.

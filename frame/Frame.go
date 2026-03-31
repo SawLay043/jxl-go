@@ -866,6 +866,18 @@ func displayBuffer(label string, frameBuffer [][]float32) float64 {
 	return total
 }
 
+func displayModularChannel(label string, frameBuffer [][]int32) float64 {
+	total := 0.0
+
+	for y := 0; y < len(frameBuffer); y++ {
+		for x := 0; x < len(frameBuffer[y]); x++ {
+			total += float64(frameBuffer[y][x])
+		}
+	}
+	log.Debugf("displayModularChannel: %s total: %f", label, total)
+	return total
+}
+
 func (f *Frame) invertSubsampling() error {
 	for c := 0; c < 3; c++ {
 		xShift := f.Header.jpegUpsamplingX[c]
